@@ -1,6 +1,6 @@
 import { Navbar, Container, Row, Col } from "react-bootstrap";
 import SearchBar from "./SearchBar";
-const MyNavbar = () => {
+const MyNavbar = ({ onSearch }) => {
   return (
     <>
       <Navbar
@@ -15,7 +15,7 @@ const MyNavbar = () => {
             </Col>
             <Col xs={12} lg={12}>
               <div className="mx-auto">
-                <SearchBar />
+                <SearchBar onSearch={onSearch} />
               </div>
             </Col>
           </Row>

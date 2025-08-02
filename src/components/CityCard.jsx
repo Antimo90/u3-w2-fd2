@@ -1,29 +1,47 @@
 import { Card, Button, Container, Row, Col } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 
-const CityCard = () => {
+const CityCard = ({ weatherData }) => {
+  const navigate = useNavigate();
+  if (!weatherData) {
+    return null;
+  }
+  const { name, sys, main, weather } = weatherData;
+  const country = sys.country;
+  const temperature = main.temp;
+  const description = weather[0].description;
+  const icon = weather[0].icon;
+
+  const handleDetailsClick = () => {
+    navigate("/dettagli", { state: { weatherData: weatherData } });
+  };
+
   return (
     <>
-      <Container>
-        <Row>
-          <Col sm={6} md={2}>
-            <Card>
-              <Card.Img
-                variant="top"
-                src="https://placecats.org/300/300"
-                alt="Immagine placeholder"
-              />
-              <Card.Body>
-                <Card.Title>Card Title</Card.Title>
-                <Card.Text>
-                  Some quick example text to build on the card title and make up
-                  the bulk of the card's content.
-                </Card.Text>
-                <Button variant="primary">Details</Button>
-              </Card.Body>
-            </Card>
-          </Col>
-        </Row>
-      </Container>
+      <Card className="d-flex">
+        <Card.Img
+          variant="top"
+          src={`http://openweathermap.org/img/wn/${icon}@2x.png`}
+          alt={description}
+        />
+        <Card.Body className="text-center d-flex flex-column">
+          <Card.Title>
+            {name}, {country}
+          </Card.Title>
+          <Card.Text className="flex-grow-1">
+            Temperatura: **{temperature}°C**
+            <br />
+            Condizioni: **{description}**
+          </Card.Text>
+          <Button
+            variant="primary"
+            onClick={handleDetailsClick}
+            className="mt-auto"
+          >
+            Details
+          </Button>
+        </Card.Body>
+      </Card>
     </>
   );
 };
