@@ -93,7 +93,13 @@ const CityWeatherList = ({ initialCity }) => {
         )}
 
         {weatherDataList.map((weatherData) => (
-          <Col xs={6} md={3} xl={2} key={weatherData.id} className="mb-4">
+          <Col
+            xs={6}
+            md={3}
+            xl={2}
+            key={weatherData.id}
+            className="mb-4 d-flex"
+          >
             <CityCard weatherData={weatherData} />
           </Col>
         ))}

@@ -1,7 +1,12 @@
 import { Form, Button, FormControl } from "react-bootstrap";
 import { useState } from "react";
-const SearchBar = ({ onSearch }) => {
+import { useNavigate } from "react-router-dom";
+
+const API_KEY = "d6cd2140ff36bef339d66429c4dc8e45";
+
+const SearchBar = () => {
   const [searchInput, setSearchInput] = useState("");
+  const navigate = useNavigate();
 
   const handleSearchInputChange = (event) => {
     setSearchInput(event.target.value);
@@ -26,13 +31,36 @@ const SearchBar = ({ onSearch }) => {
         cityPart.charAt(0).toUpperCase() + cityPart.slice(1).toLowerCase();
       const formattedCountry = countryPart.toUpperCase();
       const finalSearchTerm = `${formattedCity},${formattedCountry}`;
-      if (onSearch) {
-        onSearch(finalSearchTerm);
-      }
+
+      const endpoint = `https://api.openweathermap.org/data/2.5/weather?q=${finalSearchTerm}&appid=${API_KEY}&units=metric`;
+
+      fetch(endpoint)
+        .then((response) => {
+          if (response.ok) {
+            return response.json();
+          } else {
+            throw new Error(
+              `Città non trovata: ${finalSearchTerm}. Controlla il nome.`
+            );
+          }
+        })
+        .then((data) => {
+          navigate("/details", { state: { weatherData: data } });
+        })
+        .catch((err) => {
+          console.error(
+            `Errore durante la ricerca di ${finalSearchTerm}:`,
+            err
+          );
+          alert(err.message);
+        })
+        .finally(() => {
+          setSearchInput("");
+        });
     } else {
       alert("Formato non valido. Usa 'Città,PrefissoNazione' (es. Roma,IT)");
+      setSearchInput("");
     }
-    setSearchInput("");
   };
 
   return (
